@@ -25,7 +25,7 @@ namespace Phpneeds\Libs
 
         private static function _getConfig(): void
         {
-            self::$config = include( __DIR__ . '/../confs/conf.redis.php' );
+            self::$config = include( __DIR__ . '/../../../../confs/conf.redis.php' );
         }
 
         public static function getInstance(): Redis

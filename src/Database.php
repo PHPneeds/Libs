@@ -15,9 +15,6 @@ namespace Phpneeds\Libs
     use PDO;
     use PDOException;
 
-    /**
-     * Class Database
-     */
     class Database extends PDO
     {
         /**
@@ -49,7 +46,7 @@ namespace Phpneeds\Libs
 
         private static function _getConfig(): void
         {
-            self::$config = include( __DIR__ . '/../confs/conf.db.' . self::$configName . '.php' );
+            self::$config = include( __DIR__ . '/../../../../confs/conf.db.' . self::$configName . '.php' );
         }
 
         /**

@@ -15,9 +15,6 @@ namespace Phpneeds\Libs
     use PDO;
     use PDOException;
 
-    /**
-     * Class User
-     */
     class User
     {
 

@@ -11,6 +11,12 @@
     ],
     "type": "library",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Mertcan Ayhan",
+            "email": "mertowitch@gmail.com"
+        }
+    ],
     "require": {
         "php": ">=8.0",
         "ext-pdo": "*",
@@ -23,12 +29,6 @@
             "Phpneeds\\Libs\\": "src/"
         }
     },
-    "authors": [
-        {
-            "name": "Mertcan Ayhan",
-            "email": "mertowitch@gmail.com"
-        }
-    ],
     "config": {
         "optimize-autoloader": true,
         "sort-packages": true

@@ -11,11 +11,7 @@
 
 namespace Phpneeds\Libs
 {
-    /**
-     * Class Session
-     *
-     * @package Phpneeds\Phpneeds
-     */
+
     use JsonException;
 
     class Session
@@ -36,7 +32,7 @@ namespace Phpneeds\Libs
 
         private static function _getConfig(): void
         {
-            self::$config = include( __DIR__ . '/../confs/conf.session.php' );
+            self::$config = include( __DIR__ . '/../../../../confs/conf.session.php' );
         }
 
         /**
