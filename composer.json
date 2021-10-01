@@ -1,0 +1,38 @@
+{
+    "name": "phpneeds/libs",
+    "description": "PHPneeds library (classes) package.",
+    "homepage": "https://www.phpneeds.xyz/",
+    "keywords": [
+        "non-mvc",
+        "NoFrameWork",
+        "phpneeds",
+        "php",
+        "lightweight"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-redis": "*",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Phpneeds\\Libs\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mertcan Ayhan",
+            "email": "mertowitch@gmail.com"
+        }
+    ],
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
