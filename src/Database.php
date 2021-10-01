@@ -96,7 +96,7 @@ namespace Phpneeds\Libs
          *
          * @return bool
          */
-        public function createTable( string $tableName ): mixed
+        public function createTable( string $tableName ): bool
         {
 
             // check the "tablename" in schema. if not found in schema, return false
