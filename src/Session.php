@@ -11,14 +11,13 @@
 
 namespace Phpneeds\Libs
 {
-
-    use JsonException;
-
     /**
      * Class Session
      *
-     * @package Mertowitch\Phpneeds
+     * @package Phpneeds\Phpneeds
      */
+    use JsonException;
+
     class Session
     {
         private static object $config;
