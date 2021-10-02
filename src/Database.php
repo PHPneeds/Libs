@@ -56,9 +56,16 @@ namespace Phpneeds\Libs
          */
         public static function getInstance( string $configName = 'default' ): Database
         {
-            if ( self::$instance === null )
+            try
             {
-                self::$instance = ( new self( $configName ) )->_getNewInstance();
+                if ( self::$instance === null )
+                {
+                    self::$instance = ( new self( $configName ) )->_getNewInstance();
+                }
+            }
+            catch ( PDOException $e )
+            {
+                throw new $e;
             }
 
             return self::$instance;
@@ -75,7 +82,7 @@ namespace Phpneeds\Libs
             }
             catch ( PDOException $e )
             {
-                exit( $e->getMessage() );
+                throw new $e;
             }
 
             return $newDbInstance;
