@@ -54,7 +54,7 @@ namespace Phpneeds\Libs
          *
          * @return Database
          */
-        public static function getInstance( string $configName = 'default' ): Database
+        public static function getInstance( string $configName = 'default' ): ?Database
         {
             try
             {
@@ -65,7 +65,7 @@ namespace Phpneeds\Libs
             }
             catch ( PDOException $e )
             {
-                throw new $e;
+                self::$instance = null;
             }
 
             return self::$instance;

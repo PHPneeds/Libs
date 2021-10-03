@@ -14,8 +14,14 @@ namespace Phpneeds\Libs
 
     class Redis extends \Redis
     {
-        private static ?Redis $instance = null;
+        /**
+         * @var object
+         */
         private static object $config;
+        /**
+         * @var Redis|null
+         */
+        private static ?Redis $instance = null;
 
         private function __construct()
         {
@@ -28,16 +34,29 @@ namespace Phpneeds\Libs
             self::$config = include( __DIR__ . '/../../../../confs/conf.redis.php' );
         }
 
-        public static function getInstance(): Redis
+        /**
+         * @return Redis|null
+         */
+        public static function getInstance(): ?Redis
         {
-            if ( self::$instance === null )
+            try
             {
-                self::$instance = ( new self() )->_getNewInstance();
+                if ( self::$instance === null )
+                {
+                    self::$instance = ( new self() )->_getNewInstance();
+                }
+            }
+            catch ( \Exception $e )
+            {
+                self::$instance = null;
             }
 
             return self::$instance;
         }
 
+        /**
+         * @return Redis
+         */
         private function _getNewInstance(): Redis
         {
             try
@@ -55,10 +74,20 @@ namespace Phpneeds\Libs
             }
             catch ( \Exception $e )
             {
-                exit( $e->getMessage() );
+                throw new $e;
             }
 
             return $newRedisInstance;
+        }
+
+        /**
+         * @return object
+         */
+        public function getConfig(): object
+        {
+            $return = self::$config;
+
+            return $return;
         }
 
     }

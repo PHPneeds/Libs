@@ -17,14 +17,14 @@ namespace Phpneeds\Libs
     class Session
     {
         private static object $config;
-        private static Redis $objRedis;
+        private static ?Redis $objRedis;
 
         /**
          * Session constructor.
          *
-         * @param Redis $objRedis
+         * @param Redis|null $objRedis
          */
-        public function __construct( Redis $objRedis )
+        public function __construct( Redis $objRedis = null )
         {
             self::_getConfig();
             self::$objRedis = $objRedis;
@@ -115,12 +115,10 @@ namespace Phpneeds\Libs
 
                 if ( str_contains( $session['data'], $pattern ) )
                 {
-//					var_dump($session);
                     $ArrSession[] = $session;
                 }
             }
 
-//			$ArrSession[0]=$pattern;
             return $ArrSession;
         }
 
@@ -149,6 +147,8 @@ namespace Phpneeds\Libs
 
                 case 'redis':
 
+                    self::$objRedis->setOption( self::$objRedis::OPT_PREFIX, '' );
+
                     $arrSessionNames = self::$objRedis->keys( self::$config->NAME . '*' ) ?: [];
 
                     foreach ( $arrSessionNames as $sessionName )
@@ -161,6 +161,8 @@ namespace Phpneeds\Libs
                             'data' => $session
                         );
                     }
+
+                    self::$objRedis->setOption( self::$objRedis::OPT_PREFIX, self::$objRedis->getConfig()->PREFIX );
 
                     break;
             }
