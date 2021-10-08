@@ -22,7 +22,8 @@
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
         "ext-redis": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-imagick": "*"
     },
     "autoload": {
         "psr-4": {
