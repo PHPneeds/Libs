@@ -22,11 +22,15 @@ namespace Phpneeds\Libs
     {
         private static object $config;
         private string $sourceFile;
+        private string $cacheFilename;
         private Imagick $imagick;
         private array $sourceInfo;
-        private int $newWidth = 0;
-        private int $newHeight = 0;
+        private int $newWidth = 200;
+        private int $newHeight = 200;
         private bool $newCrop = false;
+        private int $newQuality = 80;
+        private bool $isWatermark = false;
+        private bool $isCached = false;
 
         public function __construct()
         {
@@ -48,6 +52,8 @@ namespace Phpneeds\Libs
          */
         public function pick( string $sourceFile ): Image
         {
+            $this->_reset();
+
             $this->sourceFile = $sourceFile;
 
             try
@@ -61,6 +67,18 @@ namespace Phpneeds\Libs
             }
 
             return $this;
+        }
+
+        private function _reset(): void
+        {
+            $this->cacheFilename = '';
+            $this->sourceInfo    = array();
+            $this->newWidth      = 200;
+            $this->newHeight     = 200;
+            $this->newCrop       = false;
+            $this->newQuality    = 80;
+            $this->isWatermark   = false;
+            $this->isCached      = false;
         }
 
         /**
@@ -121,6 +139,12 @@ namespace Phpneeds\Libs
          */
         public function resize(): Image
         {
+
+            if ( $this->isCached() )
+            {
+                return $this;
+            }
+
             if ( $this->sourceInfo['width'] < $this->newWidth )
             {
                 $width = $this->sourceInfo['width'];
@@ -156,12 +180,52 @@ namespace Phpneeds\Libs
         }
 
         /**
+         * @return bool
+         */
+        private function isCached(): bool
+        {
+            if ( $this->isCached === false )
+            {
+                return $this->isCached = file_exists( self::$config->PATH['CACHE'] . $this->_generateCacheFilename() );
+            }
+
+            return $this->isCached;
+        }
+
+        /**
+         * @return string
+         */
+        private function _generateCacheFilename(): string
+        {
+            $cacheFilename = array();
+
+            $cacheFilename[] = $this->sourceInfo['filename'];
+            $cacheFilename[] = $this->newWidth . 'x' . $this->newHeight;
+            $cacheFilename[] = $this->newQuality;
+            $cacheFilename[] = ( $this->newCrop ) ? 'croped' : 'nocrop';
+
+            if ( $this->isWatermark )
+            {
+                $cacheFilename[] = 'watermark-' . self::$config->WATERMARK['TEXT1'] . self::$config->WATERMARK['TEXT2'];
+            }
+
+            return $this->cacheFilename = implode( '-', $cacheFilename ) . '.jpg';
+        }
+
+        /**
          * @return $this
          * @throws ImagickDrawException
          * @throws ImagickException
          */
         public function addWatermark(): Image
         {
+            $this->isWatermark = true;
+
+            if ( $this->isCached() )
+            {
+                return $this;
+            }
+
             try
             {
                 $imagick = new Imagick;
@@ -200,6 +264,21 @@ namespace Phpneeds\Libs
         }
 
         /**
+         * @param int $quality
+         *
+         * @return $this
+         * @throws ImagickException
+         */
+        public function setQuality( int $quality ): Image
+        {
+            $this->newQuality = $quality;
+
+            $this->imagick->setImageCompressionQuality( $this->newQuality );
+
+            return $this;
+        }
+
+        /**
          * @return string
          * @throws ImagickException
          */
@@ -207,7 +286,45 @@ namespace Phpneeds\Libs
         {
             try
             {
+                if ( $this->isCached() )
+                {
+                    $this->_getCachedBlob();
+                } else
+                {
+                    $this->_cacheThis();
+                }
+
                 return $this->imagick->getImageBlob();
+            }
+            catch ( ImagickException $e )
+            {
+                throw new $e;
+            }
+        }
+
+        /**
+         * @throws ImagickException
+         */
+        private function _getCachedBlob(): void
+        {
+            try
+            {
+                $this->imagick->readImage( self::$config->PATH['CACHE'] . $this->cacheFilename );
+            }
+            catch ( ImagickException $e )
+            {
+                throw new $e;
+            }
+        }
+
+        /**
+         * @throws ImagickException
+         */
+        private function _cacheThis(): void
+        {
+            try
+            {
+                $this->imagick->writeImage( self::$config->PATH['CACHE'] . $this->cacheFilename );
             }
             catch ( ImagickException $e )
             {
