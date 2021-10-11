@@ -25,6 +25,7 @@ namespace Phpneeds\Libs
         private string $cacheFilename;
         private Imagick $imagick;
         private array $sourceInfo;
+        private array $cacheInfo;
         private int $newWidth = 200;
         private int $newHeight = 200;
         private bool $newCrop = false;
@@ -294,6 +295,16 @@ namespace Phpneeds\Libs
                     $this->_cacheThis();
                 }
 
+                $this->cacheInfo = array(
+                    'filename'     => explode( '.', basename( $this->cacheFilename ) )[0],
+                    'width'        => $this->newWidth,
+                    'height'       => $this->newHeight,
+                    'mime'         => 'image/jpeg',
+                    'extension'    => 'jpg',
+                    'modifiedDate' => filemtime( self::$config->PATH['CACHE'] . $this->cacheFilename ),
+                    'fileRealPath' => self::$config->PATH['CACHE'] . $this->cacheFilename
+                );
+
                 return $this->imagick->getImageBlob();
             }
             catch ( ImagickException $e )
@@ -330,6 +341,16 @@ namespace Phpneeds\Libs
             {
                 throw new $e;
             }
+        }
+
+        public function getCachedInfo(): array
+        {
+            if ( $this->isCached() )
+            {
+                return $this->cacheInfo;
+            }
+
+            return $this->sourceInfo;
         }
 
     }
