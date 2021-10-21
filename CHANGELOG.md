@@ -1,6 +1,10 @@
 # Changelog
 
-## [Unreleased](https://github.com/PHPneeds/Libs/v0.5.1...HEAD)
+## [Unreleased](https://github.com/PHPneeds/Libs/v0.6.0...HEAD)
+
+## [v0.6.0](https://github.com/PHPneeds/Libs/compare/v0.5.1...v0.6.0) - 2021-10-21
+### Changed
+- Image class reconstructed
 
 ## [v0.5.1](https://github.com/PHPneeds/Libs/compare/v0.5.0...v0.5.1) - 2021-10-11
 ### Added
